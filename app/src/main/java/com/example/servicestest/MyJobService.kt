@@ -9,14 +9,14 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class MyJobService:JobService() {
+class MyJobService : JobService() {
 
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     override fun onStartJob(params: JobParameters?): Boolean {
         log("onStartJob")
         coroutineScope.launch {
-            for (i in 0 until 100){
+            for (i in 0 until 100) {
                 delay(1000)
                 log("Timer: $i")
             }
@@ -36,7 +36,11 @@ class MyJobService:JobService() {
         log("onDestroy")
     }
 
-    private fun log(message: String){
+    private fun log(message: String) {
         Log.d("SERVICE_TAG", "MyJobService: $message ")
+    }
+
+    companion object {
+        const val JOB_ID = 111
     }
 }
