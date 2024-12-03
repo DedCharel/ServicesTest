@@ -17,7 +17,7 @@ class MyWorker(
     override fun doWork(): Result {
         log("doWork")
         val page = workerParameters.inputData.getInt(PAGE, 0)
-        for (i in 0 until 100) {
+        for (i in 0 until 10) {
             Thread.sleep(1000)
             log("Timer $i $page")
         }

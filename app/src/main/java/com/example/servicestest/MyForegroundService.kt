@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
@@ -26,6 +27,8 @@ class MyForegroundService: Service() {
     }
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
+    var onProgressChanged: ((Int) -> Unit)? = null
+
     override fun onCreate() {
         super.onCreate()
         log("onCreate")
@@ -42,6 +45,7 @@ class MyForegroundService: Service() {
                     .setProgress(100, i, false)
                     .build()
                 notificationManager.notify(NOTIFICATION_ID,notification)
+                onProgressChanged?.invoke(i)
                 log("Timer $i")
             }
             stopSelf() //остановка сервиса внутри сервиса
@@ -56,7 +60,7 @@ class MyForegroundService: Service() {
     }
 
     override fun onBind(intent: Intent?): IBinder? {
-        TODO("Not yet implemented")
+        return LocalBinder()
     }
 
     private fun log(message: String) {
@@ -81,6 +85,10 @@ class MyForegroundService: Service() {
         .setSmallIcon(R.drawable.ic_launcher_background)
         .setProgress(100, 0, false)
         .setOnlyAlertOnce(true) // звуковое уведомление 1 раз
+
+    inner class LocalBinder():Binder(){
+        fun getService() = this@MyForegroundService
+    }
 
     companion object {
 
